@@ -4,39 +4,54 @@
 \alias{classification}
 \title{Performs the classification methodology using complex network theory}
 \usage{
-classification(mRNA, lncRNA, word, step, sncRNA, graphic, graphic3D, classifier)
+classification(mRNA, lncRNA, word = 3, step = 1, sncRNA, predicting,
+  graphic, classifier = c("J48", "RF"), load, save)
 }
 \arguments{
-\item{mRNA}{Directory where the file lies with the mRNA sequences}
+\item{mRNA}{Directory where the file .FASTA lies with the mRNA sequences}
 
-\item{lncRNA}{Directory where the file is located fasta with lncRNA sequences}
+\item{lncRNA}{Directory where the file .FASTA lies with the lncRNA sequences}
 
-\item{word}{Size of the word to parse. By default the word parameter is set to 3}
+\item{word}{Integer that defines the size of the word to parse. By default the word parameter is set to 3}
 
-\item{step}{Determines the distance that will be traversed in the sequences for creating a new connection. By default the step parameter is set to 1}
+\item{step}{Integer that determines the distance that will be traversed in the sequences for creating a new connection. By default the step parameter is set to 1}
 
-\item{sncRNA}{Directory where the file is located fasta with the sncRNA sequences (OPTIONAL)}
+\item{sncRNA}{Directory where the file .FASTA lies with the sncRNA sequences (OPTIONAL)}
 
-\item{graphic}{TRUE or FALSE for graphics generation. As default graphic gets FALSE}
+\item{predicting}{Directory of an FASTA file containing RNA sequences. These sequences will be predicted based on the .dat file selected by the parameter "load"}
 
-\item{graphic3D}{TRUE or FALSE for 3D graphics generation. As default graphic3D gets FALSE}
+\item{graphic}{Parameter of the logical type, TRUE or FALSE for graphics generation. As default graphic gets FALSE}
 
-\item{classifier}{By default the classifier is J48, but the user can choose to use randomForest by configuring as classifier = "RF"}
+\item{classifier}{Character Parameter. By default the classifier is J48, but the user can choose to use randomForest by configuring as classifier = "RF". The prediction with a model passed by the param load only works with the classifier J48.}
+
+\item{load}{When defined this parameter will be loaded the file which is the model previously saved in the current directory with the name entered in this parameter. No file is loaded by default}
+
+\item{save}{when set, this parameter saves a .arff file with the results of the features in the current directory and also saves the tree created by the J48 classifier so that it can be used to predict RNA sequences. This parameter sets the file name. No file is created by default}
 }
 \value{
-Data.frame with the results of measures
+Results with cross-validation or the prediction result
 }
 \description{
-Given two distinct data sets, one of mnRNA and one of lncRNA. 
+Given two distinct data sets, one of mRNA and one of lncRNA. 
 The classification of the data is done from the structure of the networks formed by the sequences. 
 After this is done classifying with the J48 classifier and randomForest. 
-It is also created in the current directory a file of type arff called' result 'with all values so that it can be used later.
+It is also created in the current directory a file of type arff called' result 'with all values so that it can be used later. 
+There is also the graphic parameter that when TRUE generates graphs based on the results of each measure.
+Using the J48 classifier it is possible to generate a tree based on the dataset and then save this tree so that it can be used to predict other RNA sequences
 }
 \examples{
-arqSeqMRNA <- system.file("extdata", "sequences2.fasta", package = "BASiNET")
-arqSeqLNCRNA <- system.file("extdata", "sequences.fasta", package = "BASiNET")
-classification(mRNA=arqSeqMRNA,lncRNA=arqSeqLNCRNA,word=3,step=3,graphic=FALSE,graphic3D=FALSE)
-
+\donttest{
+ # Classification - cross validation
+ library(BASiNET)
+ arqSeqMRNA <- system.file("extdata", "sequences2.fasta", package = "BASiNET")
+ arqSeqLNCRNA <- system.file("extdata", "sequences.fasta", package = "BASiNET")
+ classification(mRNA=arqSeqMRNA,lncRNA=arqSeqLNCRNA)
+ classification(mRNA=arqSeqMRNA,lncRNA=arqSeqLNCRNA, save="example") #Save Tree to Predict Sequences
+ # Prediction
+ dataPredict <- system.file("extdata", "predict.fasta", package = "BASiNET")
+ modelPredict <- system.file("extdata", "modelPredict.dat", package = "BASiNET")
+ classification(predicting=dataPredict,load=modelPredict)
+}
 }
 \author{
 Eric Augusto Ito

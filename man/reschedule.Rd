@@ -4,16 +4,18 @@
 \alias{reschedule}
 \title{Rescales the results between values from 0 to 1}
 \usage{
-reschedule(matrix, mRNA, lncRNA, sncRNA)
+reschedule(matrix, mRNA, lncRNA, sncRNA, rangeMinMax)
 }
 \arguments{
-\item{matrix}{array with results}
+\item{matrix}{Array with results numerics}
 
-\item{mRNA}{Number of mRNA sequences}
+\item{mRNA}{Integer number of mRNA sequences}
 
-\item{lncRNA}{Number of lncRNA sequences}
+\item{lncRNA}{Integer number of lncRNA sequences}
 
-\item{sncRNA}{Number of sncRNA sequences}
+\item{sncRNA}{Integer number of sncRNA sequences}
+
+\item{rangeMinMax}{Vector with the minimum and maximum values for the scale}
 }
 \value{
 Returns the array with the rescaled values

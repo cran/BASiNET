@@ -7,9 +7,9 @@
 createNet(word, step, sequence)
 }
 \arguments{
-\item{word}{This parameter decides the size of the word that will be formed}
+\item{word}{This integer parameter decides the size of the word that will be formed}
 
-\item{step}{It is the parameter that decides the step that will be taken to make a new connection}
+\item{step}{It is the integer parameter that decides the step that will be taken to make a new connection}
 
 \item{sequence}{It is a vector that represents the sequence}
 }

@@ -3,10 +3,10 @@
 #'
 #'@description Given a graph, it is made up of several features on the graph structure and returns a vector with the data obtained
 #'
-#'@param graph The graph that will be measured
+#'@param graph The complex network that will be measured
 #'
 #'
-#'@return Vector with the results of the measurements in order:
+#'@return Return a vector with the results of the measurements in order:
 #'Average shortest path length, clustering Coefficient, degree, assortativity,
 #'betweenness, standard deviation, maximum, minimum, number of motifs
 #'size 3 and number of motifs of size 4

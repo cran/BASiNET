@@ -7,9 +7,9 @@
 threshold(x, net)
 }
 \arguments{
-\item{x}{Value that would limit the edges}
+\item{x}{Integer value that would limit the edges}
 
-\item{net}{Network where the edges will be cut}
+\item{net}{Complex network where the edges will be cut}
 }
 \value{
 Returns the complex network with the cuts already made
