@@ -21,7 +21,7 @@ minMax(matrix, mRNA, lncRNA, sncRNA, rangeMinMax)
 Returns the vector with the minimum and maximum values for the scale
 }
 \description{
-verifies the minimum and maximum values of the results.
+Verifies the minimum and maximum values of the results.
 }
 \author{
 Eric Augusto Ito

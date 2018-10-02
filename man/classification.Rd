@@ -4,8 +4,8 @@
 \alias{classification}
 \title{Performs the classification methodology using complex network theory}
 \usage{
-classification(mRNA, lncRNA, word = 3, step = 1, sncRNA, predicting,
-  graphic, classifier = c("J48", "RF"), load, save)
+classification(mRNA, lncRNA, word = 3, step = 1, sncRNA, graphic,
+  classifier = c("J48", "RF"), load, save)
 }
 \arguments{
 \item{mRNA}{Directory where the file .FASTA lies with the mRNA sequences}
@@ -17,8 +17,6 @@ classification(mRNA, lncRNA, word = 3, step = 1, sncRNA, predicting,
 \item{step}{Integer that determines the distance that will be traversed in the sequences for creating a new connection. By default the step parameter is set to 1}
 
 \item{sncRNA}{Directory where the file .FASTA lies with the sncRNA sequences (OPTIONAL)}
-
-\item{predicting}{Directory of an FASTA file containing RNA sequences. These sequences will be predicted based on the .dat file selected by the parameter "load"}
 
 \item{graphic}{Parameter of the logical type, TRUE or FALSE for graphics generation. As default graphic gets FALSE}
 
@@ -35,7 +33,7 @@ Results with cross-validation or the prediction result
 Given two distinct data sets, one of mRNA and one of lncRNA. 
 The classification of the data is done from the structure of the networks formed by the sequences. 
 After this is done classifying with the J48 classifier and randomForest. 
-It is also created in the current directory a file of type arff called' result 'with all values so that it can be used later. 
+Can be also created in the current directory a file of type arff called' result 'with all values so that it can be used later. 
 There is also the graphic parameter that when TRUE generates graphs based on the results of each measure.
 Using the J48 classifier it is possible to generate a tree based on the dataset and then save this tree so that it can be used to predict other RNA sequences
 }
@@ -48,9 +46,10 @@ Using the J48 classifier it is possible to generate a tree based on the dataset 
  classification(mRNA=arqSeqMRNA,lncRNA=arqSeqLNCRNA)
  classification(mRNA=arqSeqMRNA,lncRNA=arqSeqLNCRNA, save="example") #Save Tree to Predict Sequences
  # Prediction
- dataPredict <- system.file("extdata", "predict.fasta", package = "BASiNET")
+ mRNApredict <- system.file("extdata", "sequences2-predict.fasta", package = "BASiNET")
+ lncRNApredict <- system.file("extdata", "sequences-predict.fasta", package = "BASiNET")
  modelPredict <- system.file("extdata", "modelPredict.dat", package = "BASiNET")
- classification(predicting=dataPredict,load=modelPredict)
+ classification(mRNApredict,lncRNApredict,load=modelPredict)
 }
 }
 \author{

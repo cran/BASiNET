@@ -4,7 +4,7 @@
 #'@description Given two distinct data sets, one of mRNA and one of lncRNA. 
 #'The classification of the data is done from the structure of the networks formed by the sequences. 
 #'After this is done classifying with the J48 classifier and randomForest. 
-#'It is also created in the current directory a file of type arff called' result 'with all values so that it can be used later. 
+#'Can be also created in the current directory a file of type arff called' result 'with all values so that it can be used later. 
 #'There is also the graphic parameter that when TRUE generates graphs based on the results of each measure.
 #'Using the J48 classifier it is possible to generate a tree based on the dataset and then save this tree so that it can be used to predict other RNA sequences
 #'
@@ -13,17 +13,14 @@
 #'@param word Integer that defines the size of the word to parse. By default the word parameter is set to 3
 #'@param step Integer that determines the distance that will be traversed in the sequences for creating a new connection. By default the step parameter is set to 1
 #'@param sncRNA Directory where the file .FASTA lies with the sncRNA sequences (OPTIONAL)
-#'@param predicting Directory of an FASTA file containing RNA sequences. These sequences will be predicted based on the .dat file selected by the parameter "load"
 #'@param graphic Parameter of the logical type, TRUE or FALSE for graphics generation. As default graphic gets FALSE
 #'@param classifier Character Parameter. By default the classifier is J48, but the user can choose to use randomForest by configuring as classifier = "RF". The prediction with a model passed by the param load only works with the classifier J48.
 #'@param save when set, this parameter saves a .arff file with the results of the features in the current directory and also saves the tree created by the J48 classifier so that it can be used to predict RNA sequences. This parameter sets the file name. No file is created by default
 #'@param load When defined this parameter will be loaded the file which is the model previously saved in the current directory with the name entered in this parameter. No file is loaded by default
 #'
-#'
 #' @return Results with cross-validation or the prediction result
 #'
 #' @author Eric Augusto Ito
-#'
 #'
 #' @examples
 #'\donttest{
@@ -34,9 +31,10 @@
 #'  classification(mRNA=arqSeqMRNA,lncRNA=arqSeqLNCRNA)
 #'  classification(mRNA=arqSeqMRNA,lncRNA=arqSeqLNCRNA, save="example") #Save Tree to Predict Sequences
 #'  # Prediction
-#'  dataPredict <- system.file("extdata", "predict.fasta", package = "BASiNET")
+#'  mRNApredict <- system.file("extdata", "sequences2-predict.fasta", package = "BASiNET")
+#'  lncRNApredict <- system.file("extdata", "sequences-predict.fasta", package = "BASiNET")
 #'  modelPredict <- system.file("extdata", "modelPredict.dat", package = "BASiNET")
-#'  classification(predicting=dataPredict,load=modelPredict)
+#'  classification(mRNApredict,lncRNApredict,load=modelPredict)
 #'}
 #' @importFrom Biostrings readBStringSet
 #' @importFrom stats predict
@@ -46,25 +44,18 @@
 #' @import rJava
 #' @export
 
-classification <- function(mRNA, lncRNA, word=3, step=1, sncRNA, predicting, graphic, classifier = c('J48', 'RF'), load, save){
+classification <- function(mRNA, lncRNA, word=3, step=1, sncRNA, graphic, classifier = c('J48', 'RF'), load, save){
 
 	classifier <- match.arg(classifier)
 
-	if(!missing(predicting)){
-		seqMRNA<-readBStringSet(predicting)
-		seqLNCRNA<-NULL
-		seqSNCRNA<-NULL
-		numClass<-1
+	seqMRNA<-readBStringSet(mRNA)
+	seqLNCRNA<-readBStringSet(lncRNA)
+	if(!missing(sncRNA)){
+		seqSNCRNA<-readBStringSet(sncRNA)
+		numClass<-3
 	}else{
-		seqMRNA<-readBStringSet(mRNA)
-		seqLNCRNA<-readBStringSet(lncRNA)
-		if(!missing(sncRNA)){
-			seqSNCRNA<-readBStringSet(sncRNA)
-			numClass<-3
-		}else{
-			seqSNCRNA<-NULL
-			numClass<-2
-		}
+		seqSNCRNA<-NULL
+		numClass<-2
 	}
 
 	numSeq<-(length(seqMRNA)+length(seqLNCRNA)+length(seqSNCRNA))
@@ -82,8 +73,8 @@ classification <- function(mRNA, lncRNA, word=3, step=1, sncRNA, predicting, gra
 	for(k in seq_len(numClass)){
 		
 		if(k==1){
-			if(!missing(predicting)){
-				message("Analyzing RNA from number: ")
+			if(!missing(load)){
+				message("Analyzing")
 			}else{
 				message("Analyzing mRNA from number: ")
 			}
@@ -91,12 +82,16 @@ classification <- function(mRNA, lncRNA, word=3, step=1, sncRNA, predicting, gra
 			seq<-seqMRNA
 		}else{
 			if(k==2){
-				message("Analyzing lncRNA from number: ")
+				if(missing(load)){
+					message("Analyzing lncRNA from number: ")
+				}
 				seq<-seqLNCRNA
 				aux<-length(seqMRNA)
 			}else{
 				if(k==3){
-					message("Analyzing sncRNA from number: ")
+					if(missing(load)){
+						message("Analyzing sncRNA from number: ")
+					}
 					seq<-seqSNCRNA
 					aux<-(length(seqMRNA)+length(seqLNCRNA))
 				}
@@ -104,7 +99,9 @@ classification <- function(mRNA, lncRNA, word=3, step=1, sncRNA, predicting, gra
 		}
 
 		for(x in seq_along(seq)){
-			message(x)
+			if(missing(load)){
+				message(x)
+			}
 			sequence<-strsplit(toString(seq[x]),split='')
 			sequence<-sequence[[1]]
 			net<-createNet(word, step, sequence)
@@ -194,16 +191,18 @@ classification <- function(mRNA, lncRNA, word=3, step=1, sncRNA, predicting, gra
 	message("Creating data frame")
 	data<-cbind(assortativity, betweenness, averageShortestPathLengths, clusteringCoefficient, degree, minimum, maximum, standardDeviation, motifs3, motifs4)
 	data<-data.frame(data)
-	if(numClass==2){
-		data["CLASS"]<-factor(c("lncRNA"), levels = c("mRNA","lncRNA"));
-		for(i in seq_along(seqMRNA)){
-			data$CLASS[i] <- "mRNA"
-		}
-	}else{
-		if(numClass==3){
-			data["CLASS"]<-factor(c("lncRNA"), levels = c("mRNA","lncRNA","sncRNA"));
-			data$CLASS[seq_along(seqMRNA)] <- "mRNA"
-			data$CLASS[(length(seqMRNA)+length(seqLNCRNA)+1):(length(seqMRNA)+length(seqLNCRNA)+length(seqSNCRNA))] <- "sncRNA"
+	if(missing(load)){
+		if(numClass==2){
+			data["CLASS"]<-factor(c("lncRNA"), levels = c("mRNA","lncRNA"));
+			for(i in seq_along(seqMRNA)){
+				data$CLASS[i] <- "mRNA"
+			}
+		}else{
+			if(numClass==3){
+				data["CLASS"]<-factor(c("lncRNA"), levels = c("mRNA","lncRNA","sncRNA"));
+				data$CLASS[seq_along(seqMRNA)] <- "mRNA"
+				data$CLASS[(length(seqMRNA)+length(seqLNCRNA)+1):(length(seqMRNA)+length(seqLNCRNA)+length(seqSNCRNA))] <- "sncRNA"
+			}
 		}
 	}
 	data[is.na(data)] <- 0
@@ -218,13 +217,14 @@ classification <- function(mRNA, lncRNA, word=3, step=1, sncRNA, predicting, gra
 			obj <- J48(CLASS ~ ., data = data)
 			if(!missing(save)){
 				.jcache(obj$classifier)
-				save(obj,file=paste(save,".dat",sep=""))
+				save(obj, file=paste(save,".dat",sep=""))
 			}
 			result <- evaluate_Weka_classifier(obj, numFolds = 10, complexity = TRUE, seed = 1, class = TRUE)
 			print(obj)
-			print(result) 
+			print(result)
 		}else{
-			predict_res <- predict(object = obj, newdata=data) 
+			predict_res <- predict(object = obj, newdata=data)
+			message("Results")
 			print(predict_res)
 		}
 	}

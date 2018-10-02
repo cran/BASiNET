@@ -11,7 +11,7 @@ vignette: >
 
 ## Introduction
 <div style="text-align: justify">
-The BASiNET package aims to classify messenger RNA and long non-coding RNA, optionally also a third class such as small non-coding RNA may be included. The classification is made from measurements drawn from complex networks, for each RNA sequence a complex network is created. The networks are formed of vertices and edges, the vertices will be formed by words that can have their size defined by the parameter 'word'. It is adopted a methodology of Thresholds in the networks so that each extraction of measures is made a cut in the network for a new extraction of measures. Finally, all measurements taken from the networks are used for classification using the algorithms J48 or Random Forest. There are two data present in the BASiNET package, 'sequences' and 'sequences2' with 11 and 10 sequences respectively. These sequences were taken from the data set used in the article (LI, Aimin; ZHANG, Junying; ZHOU, Zhongyin, Plek: a tool for predicting long non-coding messages and based on an improved k-mer scheme BMC bioinformatics, BioMed Central, 2014). These sequences are used to run examples.
+The BASiNET package aims to classify messenger RNA and long non-coding RNA, optionally also a third class such as small non-coding RNA may be included. The classification is made from measurements drawn from complex networks, for each RNA sequence a complex network is created. The networks are formed of vertices and edges, the vertices will be formed by words that can have their size defined by the parameter 'word'. It is adopted a methodology of Thresholds in the networks so that each extraction of measures is made a cut in the network for a new extraction of measures. Finally, all measurements taken from the networks are used for classification using the algorithms J48 or Random Forest. There are four data present in the 'BASiNET' package, "sequences", "sequences2", "sequences-predict" and "sequences2-predict" with 11, 10, 11 and 11 sequences respectively. These sequences were taken from the data set used in the article (LI, Aimin; ZHANG, Junying; ZHOU, Zhongyin, Plek: a tool for predicting long non-coding messages and based on an improved k-mer scheme BMC bioinformatics, BioMed Central, 2014). These sequences are used to run examples. The BASiNET was published (ITO, Eric; KATAHIRA, Isaque; VICENTE, Fábio; PEREIRA, Felipe; LOPES, Fabrício, BASiNET—BiologicAl Sequences NETwork: a case study on coding and non-coding RNAs identification, Nucleic Acids Research, 2018).
 </div>
 
 ## Instalation
@@ -52,8 +52,6 @@ lncRNA - Directory of an FASTA file containing lncRNA sequences.
 
 sncRNA - Directory of an FASTA file containing lncRNA sequences, this parameter is optional.
 
-predicting - Directory of an FASTA file containing RNA sequences. These sequences will be predicted based on the .dat file selected by the parameter "load". By default is NULL.
-
 graphic - If TRUE is used to generate two-dimensional graphs between Thresholds x Measure. By default it is considered FALSE.
 
 classifier - Character Parameter. By default the classifier is J48, but the user can choose to use randomForest by configuring as classifier = "RF". The prediction with a model passed by the param load only works with the classifier J48.
@@ -92,8 +90,9 @@ To predict a set of data, two parameters need to be set up, the first one is cal
 </div>
 Defining parameters:
 ```{r}
-dataPredict <- system.file("extdata", "predict.fasta", package = "BASiNET")
+mRNApredict <- system.file("extdata", "sequences2-predict.fasta", package = "BASiNET")
+lncRNApredict <- system.file("extdata", "sequences-predict.fasta", package = "BASiNET")
 modelPredict <- system.file("extdata", "modelPredict.dat", package = "BASiNET")
 library(BASiNET)
-classification(predicting=dataPredict,load=modelPredict)
+classification(mRNApredict,lncRNApredict,load=modelPredict)
 ```

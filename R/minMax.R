@@ -1,7 +1,7 @@
 #'@title Minimum and maximum
 #'@name minMax
 #'
-#'@description verifies the minimum and maximum values of the results.
+#'@description Verifies the minimum and maximum values of the results.
 #'
 #'@param matrix Array with results numerics
 #'@param mRNA Integer number of mRNA sequences

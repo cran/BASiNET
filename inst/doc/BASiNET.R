@@ -8,8 +8,9 @@ classification(mRNA,lncRNA, save="example")
 knitr::include_graphics("2d.png")
 
 ## ------------------------------------------------------------------------
-dataPredict <- system.file("extdata", "predict.fasta", package = "BASiNET")
+mRNApredict <- system.file("extdata", "sequences2-predict.fasta", package = "BASiNET")
+lncRNApredict <- system.file("extdata", "sequences-predict.fasta", package = "BASiNET")
 modelPredict <- system.file("extdata", "modelPredict.dat", package = "BASiNET")
 library(BASiNET)
-classification(predicting=dataPredict,load=modelPredict)
+classification(mRNApredict,lncRNApredict,load=modelPredict)
 
