@@ -32,7 +32,7 @@ source("https://bioconductor.org/biocLite.R")
 
 biocLite("Biostrings")
 
-In order for the rJava package to work properly, you must have installed JDK java(http://www.oracle.com/technetwork/java/javase/downloads/jdk10-downloads-4416644.html) and JRE java(http://www.oracle.com/technetwork/pt/java/javase/downloads/jre8-downloads-2133155.html). 
+In order for the rJava package to work properly, you must have installed JDK java(https://www.oracle.com/java/technologies/downloads/) and JRE java(https://www.java.com/pt-BR/download/manual.jsp). 
 
 </div>
 

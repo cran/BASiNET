@@ -23,7 +23,7 @@ measures <- function(graph){
 	measures<-c(measures,transitivity(graph,type=c("undirected"),vids=NULL,weights=NULL, isolates=c("NaN","zero")))
 	measures<-c(measures,mean(degree(graph, v=V(graph), normalized=FALSE)))
 	measures<-c(measures,assortativity_degree(graph, directed = FALSE))
-	measures<-c(measures,mean(betweenness(graph, v = V(graph), directed = FALSE, weights = NULL,nobigint = TRUE, normalized = FALSE)))
+	measures<-c(measures,mean(betweenness(graph, v = V(graph), directed = FALSE, weights = NULL, normalized = FALSE)))
 	measures<-c(measures,sd(degree(graph, v=V(graph), normalized= FALSE), na.rm = FALSE))
 	measures<-c(measures,which.max(degree(graph, v=V(graph), normalized=FALSE)))
 	measures<-c(measures,which.min(degree(graph, v=V(graph), normalized=FALSE)))
